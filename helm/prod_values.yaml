@@ -1,0 +1,4 @@
+#default values
+container:
+ image: nginx:latest
+replicaCount: 2

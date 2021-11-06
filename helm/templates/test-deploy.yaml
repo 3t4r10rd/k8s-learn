@@ -1,0 +1,22 @@
+#.Release.Name - стандартная переменная Helm
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: {{ .Release.Name }}-deployment
+ labels:
+  app: {{ .Release.Name }}-deploy
+spec:
+ replicas: {{ .Values.replicaCount }} #from values file
+ selector:
+  matchLabels:
+   project: {{ .Release.Name }}-test
+ template:
+  metadata:
+   labels:
+    project: {{ .Release.Name }}-test #labels used by services
+  spec:
+   containers:
+   - name: test-web
+     image: {{ .Values.container.image }} #from values file
+     ports:
+     - containerPort: 80

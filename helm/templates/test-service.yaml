@@ -1,0 +1,16 @@
+#.Release.Name - стандартная переменная Helm
+apiVersion: v1
+kind: Service
+metadata:
+ name: {{ .Release.Name }}-service
+ labels:
+  env: prod
+spec:
+ selector:
+  project: {{ .Release.Name }}-test #select PODS with labels
+ ports:
+  - name: {{ .Release.Name }}-listener
+    protocol: TCP
+    port: 80 #port on LoadBalancer
+    targetPort: 80 #port on POD
+ type: LoadBalancer
