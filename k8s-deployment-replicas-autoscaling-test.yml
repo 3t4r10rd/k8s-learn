@@ -1,0 +1,56 @@
+#api version of k8s
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+#deployment name
+ name: test-depl-repl-hpa
+ labels:
+  app: k8s-test-app
+  env: prodv2
+spec:
+#desciption replicas (numbers of replicas)
+ replicas: 2
+#description pods for deployment
+ selector:
+  matchLabels:
+   project: test4
+#template pod for deployment
+ template:
+  metadata:
+   labels:
+    project: test4
+#description containers for pod
+  spec:
+   containers:
+    - name: test4-web
+      image: httpd
+      ports:
+       - containerPort: 80
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+ name: test-autoscaling
+spec: 
+ scaleTargetRef:
+  apiVersion: apps/v2
+  kind: Deployment
+#name of deployment for autoscale
+  name: test-depl-repl-hpa
+ minReplicas: 1
+ maxReplicas: 3
+#condition for create new replicas
+ metrics:
+ - type: Resource
+   resource:
+    name: cpu
+    target:
+     type: Utilization
+     averageUtilization: 70
+ - type: Resource
+   resource:
+    name: memory
+    target:
+     type: Utilization
+     averageUtilization: 80
+

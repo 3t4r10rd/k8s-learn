@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ name: myweb
+ labels:
+  env: prod
+  app: main
+  tier: frontend
+  owner: me
+spec:
+ containers:
+  - name: container-apache
+    image: httpd:latest
+    ports:
+     - containerPort: 80

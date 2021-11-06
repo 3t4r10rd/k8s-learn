@@ -1,0 +1,26 @@
+#api version of k8s
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+#deployment name
+ name: test-deployment2
+ labels:
+  app: k8s-test-app
+spec:
+#description pods for deployment
+ selector:
+  matchLabels:
+   project: test2
+#template pod for deployment
+ template:
+  metadata:
+   labels:
+    project: test2
+#description containers for pod
+  spec:
+   containers:
+    - name: test2-web
+      image: httpd
+      ports:
+       - containerPort: 80
+
