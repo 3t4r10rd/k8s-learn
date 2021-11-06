@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: test-deploy3
+ labels:
+  app: test-deploy3
+spec:
+ selector:
+  matchLabels:
+   project: test3
+ template:
+  metadata:
+   labels:
+    project: test3 #labels used by services
+  spec:
+   containers:
+   - name: test-web
+     image: httpd
+     ports:
+     - containerPort: 80
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+ name: test-hpa
+spec:
+ scaleTargetRef:
+  apiVersion: apps/v2
+  kind: Deployment
+  name: test-deploy3
+ minReplicas: 2
+ maxReplicas: 4
+ metrics:
+ - type: Resource
+   resource:
+    name: cpu
+    target:
+     type: Utilization
+     averageUtilization: 70
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: test-deploy3
+ labels:
+  env: prod
+spec:
+ selector:
+  project: test3 #select PODS with labels
+ ports:
+  - name: app-listener
+    protocol: TCP
+    port: 80 #port on LoadBalancer
+    targetPort: 80 #port on POD
+ type: LoadBalancer

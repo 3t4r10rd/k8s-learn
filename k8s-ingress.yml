@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+ name: http-ingress
+ annotations:
+  kubernetes.io/ingress.class: "nginx"
+
+spec:
+ rules:
+ - host: main.a1.com
+   http:
+    paths:
+     - path: /
+       pathType: Prefix
+       backend:
+        service:
+         name: main
+         port:
+          number: 80
+ - host: tomcat.a1.com
+   http:
+    paths:
+     - path: /
+       pathType: Prefix
+       backend:
+        service:
+         name: tomcat
+         port:
+          number: 8080
+
+# -  http:
+#     paths:
+#     - path: /tomcat
+#       pathType: Exact
+#       backend:
+#        service:
+#         name: tomcat
+#         port:
+#          number: 8080
